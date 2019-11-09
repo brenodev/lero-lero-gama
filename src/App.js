@@ -1,26 +1,72 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+import axios from 'axios';
+import "./App.css"
+import api from "./api"
+import quotes from "./quotes"
+import QuoteAndAuthor from './QuoteAndAuthor';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// const App = () => {
+//     const [message, setMessage] = useState([]);
+    
+//     useEffect(() => {
+//       axios.get("https://api.chucknorris.io/jokes/random").then(resp => {
+
+//     console.log(resp.data.icon_url);
+//     }); 
+//   })
+
+// return (
+//     <div>
+      
+//     </div>
+//   )
+// }
+// export default App
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      quote: quotes[0].quote,
+
+    };
+  }
+  randomQuote() {
+    const randomNumber = Math.floor(Math.random() * quotes.length);
+    return quotes[randomNumber];
+    
+  }
+  shuffleQuotes(array){
+    return array.sort(()=>Math.random()-0.5)
+  }
+
+  handleClick = () => {
+    const generateRandomQuote = this.randomQuote();
+    this.setState({
+      quote: generateRandomQuote.quote,
+      author: generateRandomQuote.author
+    });
+    this.shuffleQuotes(quotes)
+  };
+
+  randomColor() {
+    const color = `rgb(
+      ${Math.floor(Math.random() * 155)},
+      ${Math.floor(Math.random() * 155)},
+      ${Math.floor(Math.random() * 155)})`;
+    return color;
+  }
+  
+  render() {
+    return (
+      <div>
+        <QuoteAndAuthor
+          displayColor={this.randomColor}
+          handleClick={this.handleClick}
+          {...this.state}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;
